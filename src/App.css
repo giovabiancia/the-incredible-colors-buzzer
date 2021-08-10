@@ -1,38 +1,110 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.center {
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  align-items: center;
+}
+html {
+  overflow: hidden;
 }
 
-.App-link {
-  color: #61dafb;
+.buttonHome {
+  height: 50px;
+  width: 200px;
+  text-transform: uppercase;
+  font-weight: 600;
+  border: 2px solid black;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+.handler {
+  cursor: pointer;
+  text-transform: uppercase;
+}
+.mainLight {
+  height: 250px;
+  width: 250px;
+
+  border-radius: 50%;
+}
+.buttonLight {
+  height: 70px;
+  width: 70px;
+  border-radius: 50%;
+}
+
+.buttonBar {
+  margin-left: 80px;
+  margin-right: 80px;
+}
+
+.buttonBar .red {
+  background-color: red;
+  cursor: pointer;
+}
+.buttonBar .red:hover {
+  background-color: lightcoral;
+}
+
+.buttonBar .blue {
+  background-color: blue;
+  cursor: pointer;
+}
+.buttonBar .blue:hover {
+  background-color: lightblue;
+}
+
+.buttonBar .yellow {
+  background-color: yellow;
+  cursor: pointer;
+}
+.buttonBar .yellow:hover {
+  background-color: rgb(230, 230, 103);
+}
+
+.buttonBar .green {
+  background-color: green;
+  cursor: pointer;
+}
+.buttonBar .green:hover {
+  background-color: lightgreen;
+}
+.gray {
+  background-color: gray;
+}
+.green {
+  background-color: green;
+}
+.blue {
+  background-color: blue;
+}
+.yellow {
+  background-color: yellow;
+}
+.red {
+  background-color: red;
+}
+
+.h1 {
+  font-size: 70px;
+}
+
+@media only screen and (max-width: 768px) {
+  /* For mobile phones: */
+  .buttonLight {
+    height: 45px;
+    width: 45px;
   }
-  to {
-    transform: rotate(360deg);
+  .h1 {
+    font-size: 55px;
+  }
+  .buttonBar {
+    margin-top: 100px !important;
+  }
+  .mainLight {
+    height: 200px;
+    width: 200px;
+  }
+  .buttonBar {
+    margin-left: 10px;
+    margin-right: 10px;
   }
 }
