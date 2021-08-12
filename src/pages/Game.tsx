@@ -27,6 +27,7 @@ const Game:React.FC=()=> {
     const [gameDuration, setGameDuration] = useState(10)
     const [game,setGame] = useContext(GameContext)
     const [champion, setChampion] = useState(false)
+    const [buttonColors, setButtonColors] = useState(['red', 'green', 'yellow', 'blue'])
 
 
 
@@ -121,6 +122,23 @@ const Game:React.FC=()=> {
     const handleButtonClick=(color:string, timeClick:number) => {
         let buttonSound = new Audio("/buttonSound.wav")
         buttonSound.play()
+
+
+        // CAMBIA ORDINE AI COLORI
+
+
+        var randomOrder = buttonColors.sort(func);
+
+        function func(a:string, b:string) {
+        return 0.5 - Math.random();
+        }
+
+        setButtonColors(randomOrder)
+
+
+
+
+
         // a ogni click diminuisce il tempo di 0,2s
         /* console.log(secondi)
         console.log(millisecondi) */
@@ -244,10 +262,12 @@ const Game:React.FC=()=> {
                 <Col className="center "><div className={'mainLight '+mainColor}></div></Col>
             </Row>
             <Row className="buttonBar mt-4">
-                <Col  xs='3'  className="center mt-4"><div className="buttonLight red" onClick={()=>handleButtonClick('red', Date.now())}></div></Col>
-                <Col  xs='3'  className="center mt-4"><div className="buttonLight blue" onClick={()=>handleButtonClick('blue', Date.now())}></div></Col>
-                <Col  xs='3'  className="center mt-4"><div className="buttonLight green" onClick={()=>handleButtonClick('green', Date.now())}></div></Col>
-                <Col  xs='3'  className="center mt-4"><div className="buttonLight yellow" onClick={()=>handleButtonClick('yellow', Date.now())}></div></Col>
+                {buttonColors.map((color)=>
+                    <Col  xs='3'  className="center mt-4"><div className={"buttonLight "+color} onClick={()=>handleButtonClick(color, Date.now())}></div></Col>
+
+                )}
+
+
             </Row>
 
             <Row className="mt-4">
