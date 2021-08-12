@@ -5,12 +5,14 @@ import Countdown from 'react-countdown';
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from 'react-router-dom';
 import { GameContext } from './../context/GameContext';
+import ReactAudioPlayer from 'react-audio-player';
+
+
 
 
 const Game:React.FC=()=> {
     const [mainColor, setMainColor] = useState('gray')
     const [playerName, setPlayerName] = useState('')
-    const [counter, setCounter] = useState(0)
     const [over, setOver] = useState(false);
     const [millisecondi, setMillisecondi ] = useState(0);
     const [secondi, setSecondi ] = useState(0);
@@ -22,9 +24,11 @@ const Game:React.FC=()=> {
     const history = useHistory()
     const [showModal, setShowModal] = useState(false);
     const [showInputModal, setShowInputModal] = useState(false);
-    const [gameDuration, setGameDuration] = useState(5)
+    const [gameDuration, setGameDuration] = useState(10)
     const [game,setGame] = useContext(GameContext)
     const [champion, setChampion] = useState(false)
+
+
 
 
   const tick = (click:boolean, timeClick:number) => {
@@ -38,33 +42,24 @@ const Game:React.FC=()=> {
             var end:Date = new Date();
             // secondi trascorsi
             // tempo trascorso in secondi
-
             // DEVI FARE IN MODO CHE IL CRONOMETRO NON CAMBI .... POI SOTTRAI 0,2
-
             // input
             console.log('tempo trascorso in secondi'+ (gameDuration- secondi))
-
             console.log('secondi '+ secondi)
             console.log('millisecondi '+ millisecondi)
-
             console.log('secondi attuali', end.getSeconds())
-
             let mil = millisecondi/1000
             let time = secondi+mil
             console.log('secondi + millisecondi'+ time)
-
             // output il tempo finale aumentato di 0,2
             end.setSeconds(end.getSeconds() + time);
-
-
         }else{
-            // nessun click
+
             var end:Date = new Date();
             end.setSeconds(end.getSeconds() + gameDuration); // 10 s
         }
         setStart((prev) => !prev)
       /*   console.log('TICK: start time'+timeStart) */
-
         var _second = 1000;
         var _minute = _second * 60;
         var timer:any;
@@ -76,7 +71,6 @@ const Game:React.FC=()=> {
                 clearInterval( timer );
                 setMillisecondi(0)
                 setOver(true)
-                // funzione per confrontarlo con quello degli ultimi 10
                 setShowModal(true)
 
                 checkConditions()
@@ -95,7 +89,7 @@ const Game:React.FC=()=> {
 
  // in un tempo che va da 0.5 a 1.5 la luce centrale mostra un colore.
     useEffect(() => {
-        setOver(false)
+
 
         let min = 0.5;
         let max = 1.5;
@@ -125,10 +119,11 @@ const Game:React.FC=()=> {
 
 
     const handleButtonClick=(color:string, timeClick:number) => {
+        let buttonSound = new Audio("/buttonSound.wav")
+        buttonSound.play()
         // a ogni click diminuisce il tempo di 0,2s
         /* console.log(secondi)
         console.log(millisecondi) */
-
         // devi richiamare la funzione tick()
         // dirgli che al click si diminuisce di 0,2 altrimenti continua normale
 
@@ -165,28 +160,27 @@ const Game:React.FC=()=> {
             setShowModal(true);
 
         }
-        console.log('handleButtonClick: setto punteggio')
-        console.log('handleButtonClick punteggio: '+punteggio)
+        /* console.log('handleButtonClick: setto punteggio')
+        console.log('handleButtonClick punteggio: '+punteggio) */
 
     }
 
     const handleCloseModal = () => {
         setShowModal(false)
         setPlayerName('')
-        console.log('closeModal: riazzero punteggio')
+        /* console.log('closeModal: riazzero punteggio') */
         setPunteggio(0)
+        setOver(false)
 
     }
 
     const handleTryAgain=()=>{
         // salvo la giocata
-        console.log('handleTryAgain: salvo giocata')
-
-        console.log('handleTryAgain punteggio: '+punteggio)
+        /* console.log('handleTryAgain: salvo giocata')
+        console.log('handleTryAgain punteggio: '+punteggio) */
         let objGame = {
             playerName: playerName,
             punteggio: punteggio,
-
         }
         setGame((prev:any) =>[...prev, objGame ])
         handleCloseModal()
@@ -203,8 +197,8 @@ const Game:React.FC=()=> {
     const checkConditions = ()=>{
         // se sono le prime 10 giocate salvali tutti ho messo 2 per semplificare il debug
         // PROBLEMA IL PUNTEGGIO QUI è 0
-        console.log('checkConditions: controllo condizioni')
-        console.log('checkConditions punteggio: '+punteggio)
+        /* console.log('checkConditions: controllo condizioni')
+        console.log('checkConditions punteggio: '+punteggio) */
 
         if (game.length < 2){
 
@@ -215,12 +209,13 @@ const Game:React.FC=()=> {
             // controlla che il punteggio attuale sia tra i primi 10 della leaderboard
             for (var i = 0; i < game.length; i++) {
                 var oldPoint = game[i].punteggio
+                console.log('punteggi passati:'+ oldPoint)
 
                 if(punteggio>oldPoint){
                     if(i<2){
                         setShowInputModal(true)
                     }
-                    if(i==1){
+                    if(i===1){
                         console.log('you are the champion')
                         setChampion(true)
                     }
@@ -255,6 +250,19 @@ const Game:React.FC=()=> {
                 <Col  xs='3'  className="center mt-4"><div className="buttonLight yellow" onClick={()=>handleButtonClick('yellow', Date.now())}></div></Col>
             </Row>
 
+            <Row className="mt-4">
+                <Col className="center mt-4 ">
+                    <ReactAudioPlayer
+                    src={'/supermario.mp3'}
+                    autoPlay={true}
+                    muted={over}
+                    loop
+                    volume={0.4}
+                    controls
+                    />
+                </Col>
+            </Row>
+
 
 
             <Modal show={showModal} onHide={handleCloseModal} centered backdrop="static">
@@ -271,10 +279,7 @@ const Game:React.FC=()=> {
                     </div>
 
                     }
-
-
                 </Modal.Body>
-
                 <Modal.Footer>
                 <Button variant="secondary" onClick={handleTryAgain}>
                     Riprova a giocare
@@ -284,6 +289,7 @@ const Game:React.FC=()=> {
                 </Button>
                 </Modal.Footer>
             </Modal>
+
 
 
         </Container>
