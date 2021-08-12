@@ -1,12 +1,14 @@
 import React from 'react'
 import { Container, Row, Col } from 'react-bootstrap'
 import { useHistory } from 'react-router-dom';
+import { useSelector, useDispatch,RootStateOrAny } from "react-redux";
 interface Header {
     punteggio: number;
-
 }
 
 const Header=(props:Header)=> {
+    const punteggio = useSelector((state: RootStateOrAny) => {
+    return state.punteggio})
     const history = useHistory()
 
     const goToHome=()=>{

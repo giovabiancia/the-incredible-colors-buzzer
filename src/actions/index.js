@@ -6,3 +6,9 @@ export const increment = (num) => {
     payload: num,
   };
 };
+export const saveGame = (obj) => {
+  return {
+    type: "SAVE_GAME",
+    payload: obj,
+  };
+};
