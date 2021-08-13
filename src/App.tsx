@@ -8,6 +8,7 @@ import Game from './pages/Game';
 import { GameProvider } from './context/GameContext';
 
 
+
 const App : React.FC =()=> {
 
 
@@ -21,6 +22,7 @@ const App : React.FC =()=> {
         </Switch>
       </BrowserRouter>
     </GameProvider>
+
   );
 }
 

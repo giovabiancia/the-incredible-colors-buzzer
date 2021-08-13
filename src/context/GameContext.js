@@ -1,9 +1,20 @@
 import React, { createContext, useState, useEffect } from "react";
+import axios from "axios";
 
 export const GameContext = createContext();
 
 export const GameProvider = (props) => {
   const [game, setGame] = useState([]);
+  useEffect(() => {
+    // FaKE SERVER
+    axios
+      .get("https://my-json-server.typicode.com/giovabiancia/demo/posts")
+      .then((response) => {
+        console.log(response.data);
+        setGame(response.data);
+      });
+  }, []);
+
   useEffect(() => {
     // ordine la classifica
     let classifica = game.sort((a, b) => a.punteggio - b.punteggio);
