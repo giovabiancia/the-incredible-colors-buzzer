@@ -10,7 +10,6 @@ export const GameProvider = (props) => {
     axios
       .get("https://my-json-server.typicode.com/giovabiancia/demo/posts")
       .then((response) => {
-        console.log(response.data);
         setGame(response.data);
       });
   }, []);

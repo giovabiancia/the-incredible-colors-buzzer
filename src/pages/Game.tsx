@@ -1,12 +1,10 @@
-import React , {useCallback, useEffect, useState, useContext} from 'react'
+import React , { useEffect, useState, useContext} from 'react'
 import { Container, Row, Col, Modal, Button } from 'react-bootstrap'
 import Header from '../components/Game/Header'
-import Countdown from 'react-countdown';
-import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from 'react-router-dom';
 import { GameContext } from './../context/GameContext';
 import ReactAudioPlayer from 'react-audio-player';
-import  axios  from 'axios';
+
 
 
 
@@ -28,6 +26,7 @@ const Game:React.FC=()=> {
     const [gameDuration, setGameDuration] = useState(10)
     const [game,setGame] = useContext(GameContext)
     const [champion, setChampion] = useState(false)
+    const [vita, setVita] = useState(1)
     const [buttonColors, setButtonColors] = useState(['red', 'green', 'yellow', 'blue'])
 
     const gameDurationFixed = 10
@@ -35,28 +34,24 @@ const Game:React.FC=()=> {
 
 
 
-  const tick = (click:boolean, timeClick:number) => {
+  const tick = (click:boolean) => {
     var end:Date = new Date();
-
-      // se è il click del bottone.. clearInterval
+      // se clicca bottone fai partire un nuovo intervallo
         if (click) {
-            console.log('tempo trascorso in secondi'+ (gameDuration- secondi))
-            console.log('secondi '+ secondi)
-            console.log('millisecondi '+ millisecondi)
-            let timeNow = secondi + (millisecondi/1000)
-            console.log('timeNow secondi + millisecondi '+ timeNow)
 
+            let timeNow = secondi + (millisecondi/1000)
+            // se il tempo è maggiore di 1/5 diminuisci dal tempo totale 0,2
             if(timeNow > gameDurationFixed/5){
-                // se il tempo è maggiore di 1/5
                 clearInterval(intervalID)
                 end.setSeconds(end.getSeconds() + gameDuration );
                 setGameDuration((prev)=>prev-0.2)
             }else{
+                // altrimenti riparti da 1/5 del totale del tempo
                 clearInterval(intervalID)
                 end.setSeconds(end.getSeconds() + gameDurationFixed/5 );
-               //
             }
         }else{
+            // se non è un click fai partire il tempo
             end.setSeconds(end.getSeconds() + gameDuration); // 10 s
         }
         setStart((prev) => !prev)
@@ -72,7 +67,6 @@ const Game:React.FC=()=> {
                 setMillisecondi(0)
                 setOver(true)
                 setShowModal(true)
-
                 checkConditions()
 
             }else{
@@ -87,12 +81,8 @@ const Game:React.FC=()=> {
   };
 
 
-
-
  // in un tempo che va da 0.5 a 1.5 la luce centrale mostra un colore.
     useEffect(() => {
-
-
         let min = 0.5;
         let max = 1.5;
         let randomRange = Math.random() * (max - min) + min;
@@ -100,56 +90,46 @@ const Game:React.FC=()=> {
             const colorsArray = ["red","blue","green","yellow"];
             const random = Math.floor(Math.random() * colorsArray.length);
             setMainColor(colorsArray[random])
-            tick(false, 0 )
-            /* saveDate() */
+            tick(false )
         },randomRange*1000);
-        // Il tempo parte dopo randomRange
     }, [restart])
 
 
-
     useEffect(() => {
+        setOver(false)
         setChampion(false);
+        var starts = Date.now()
+        setTimeStart(()=>starts)
+        console.log('timeStart:'+ timeStart)
 
-
-      var starts = Date.now()
-      setTimeStart(()=>starts)
-      /* console.log('useEffect: start time'+starts) */
     }, [start])
-
-
 
 
     const handleButtonClick=(color:string, timeClick:number) => {
         let buttonSound = new Audio("/buttonSound.wav")
         buttonSound.play()
-
-
         // CAMBIA ORDINE AI COLORI
-
         var randomOrder = buttonColors.sort(func);
-
         function func(a:string, b:string) {
         return 0.5 - Math.random();
         }
-
         setButtonColors(randomOrder)
-
-        if(color==mainColor){
+        if(color===mainColor){
             // se il click è giusto faccio ripartire un altro timer
-            tick(true,  Date.now())
+            tick(true)
 
             // cambio i colori ai bottoni in modo casuale
             const colorsArray = ["red","blue","green","yellow"];
             const random = Math.floor(Math.random() * colorsArray.length);
             setMainColor(colorsArray[random])
 
-            // assegno un punteggio in base al range di tempo
+            // assegno un punteggio in base al range di tempo rimanente sull' orologio in quel momento
+            console.log('timestart', timeStart)
             let timeDifference = (timeClick-timeStart) /1000
-            let middle= (gameDuration/3)*2
-            let last = (gameDuration/3)
+            let middle= (gameDurationFixed/3)*2
+            let last = (gameDurationFixed/3)
 
-            if (timeDifference<gameDuration && timeDifference>middle){
+            if (timeDifference<gameDurationFixed && timeDifference>middle){
                 setPunteggio((prev)=>prev+50)
 
             }else if (timeDifference<middle && timeDifference>last){
@@ -157,7 +137,6 @@ const Game:React.FC=()=> {
             }else if (timeDifference<last && timeDifference>0){
                 setPunteggio((prev)=>prev+10)
             }
-
         }
         if(color!==mainColor) {
             // se sbaglia mostro modal azzero intervallo
@@ -165,6 +144,7 @@ const Game:React.FC=()=> {
             clearInterval(intervalID);
             setIntervalID(-1);
             setMainColor('gray')
+            setOver(true);
         }else if(over){
             setShowModal(true);
         }
@@ -175,22 +155,28 @@ const Game:React.FC=()=> {
     const handleCloseModal = () => {
         setShowModal(false)
         setPlayerName('')
-        setPunteggio(0)
-        setOver(false)
+        if(vita===3){
+            setPunteggio(0)
+        }
+        setOver(true)
         setGameDuration(10)
     }
 
     const handleTryAgain=()=>{
         // salvo la giocata
-        let objGame = {
-            playerName: playerName,
-            punteggio: punteggio,
-        }
-        setGame((prev:any) =>[...prev, objGame ])
         handleCloseModal()
         setShowInputModal(false)
         // ricomincia
         setRestart((prev) =>!prev)
+        if (vita === 3 ){
+            setVita(0)
+            let objGame = {
+                playerName: playerName,
+                punteggio: punteggio,
+            }
+            setGame((prev:any) =>[...prev, objGame ])
+        }
+        setVita((prev)=>prev+1)
     }
     const goToHome=()=>{
         // torna alla home
@@ -201,7 +187,6 @@ const Game:React.FC=()=> {
 
     const checkConditions = ()=>{
         // se sono le prime 10 giocate salvali tutti ho messo 2 per semplificare il debug
-
         if (game.length < 2){
             setShowInputModal(true)
         }
@@ -213,9 +198,11 @@ const Game:React.FC=()=> {
                 console.log('punteggi passati:'+ oldPoint)
 
                 if(punteggio>oldPoint){
+                    // se è tra i migliori 2
                     if(i<2){
                         setShowInputModal(true)
                     }
+                    // se è il migliore
                     if(i===1){
                         console.log('you are the champion')
                         setChampion(true)
@@ -230,14 +217,12 @@ const Game:React.FC=()=> {
     return (
         <Container>
 
-            <Header punteggio ={punteggio}></Header>
+            <Header punteggio ={punteggio} vita={vita}></Header>
             <Row>
-                <Col className=" mt-4 mb-4">
-                  {/*   <h1>{`${s.toString().padStart(2, '0')}`}</h1> */}
-                  <div >
-                    <h1 style={{textAlign: 'center'}}>{secondi}.{millisecondi}</h1>
+                <Col className=" mt-4 mb-4 center">
+                  <div style={{height:'fit-content', width:200}}>
+                    <h1 style={{marginLeft:65}} >{secondi}.{millisecondi}</h1>
                   </div>
-
                 </Col>
             </Row>
             <Row >
@@ -257,7 +242,7 @@ const Game:React.FC=()=> {
                     muted={over}
                     loop
                     volume={0.4}
-                    controls
+
                     />
                 </Col>
             </Row>
@@ -268,7 +253,8 @@ const Game:React.FC=()=> {
                 <Modal.Header closeButton >
                 <Modal.Title></Modal.Title>
                 </Modal.Header>
-                <Modal.Body>Gioco Terminato!
+                {vita ===3 ?
+                    <Modal.Body>Gioco Terminato!
                     {champion && <h4>Sei il campione !!</h4>}
 
                     {showInputModal &&
@@ -276,12 +262,17 @@ const Game:React.FC=()=> {
                         <p >Congratulazioni il tuo punteggio di {punteggio} rientra tra i primi 2 della leaderBoard</p>
                         <input placeholder="inserici il tuo nome" type="text"  maxLength={3} value={playerName} onChange={(e)=>setPlayerName(e.target.value)}></input>
                     </div>
-
                     }
-                </Modal.Body>
+                    </Modal.Body>:
+                    <Modal.Body>
+                            <h4> Ti rimangono {3-vita} vite</h4>
+
+                    </Modal.Body>
+                }
+
                 <Modal.Footer>
                 <Button variant="secondary" onClick={handleTryAgain}>
-                    Riprova a giocare
+                   {vita === 3 ? "Riprova a giocare":"Continua" }
                 </Button>
                 <Button variant="primary" onClick={goToHome}>
                     Torna a Home
