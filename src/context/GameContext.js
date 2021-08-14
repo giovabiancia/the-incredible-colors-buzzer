@@ -10,7 +10,10 @@ export const GameProvider = (props) => {
     axios
       .get("https://my-json-server.typicode.com/giovabiancia/demo/posts")
       .then((response) => {
-        setGame(response.data);
+        let classifica = response.data.sort(
+          (a, b) => a.punteggio - b.punteggio
+        );
+        setGame(classifica.reverse());
       });
   }, []);
 

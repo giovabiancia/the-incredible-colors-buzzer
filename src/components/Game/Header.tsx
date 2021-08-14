@@ -1,13 +1,13 @@
 import React from 'react'
-import { Container, Row, Col } from 'react-bootstrap'
+import { Row, Col } from 'react-bootstrap'
 import { useHistory } from 'react-router-dom';
 
-interface Header {
+interface HeaderProp {
     punteggio: number;
     vita:number
 }
 
-const Header=(props:Header)=> {
+const Header=(props:HeaderProp)=> {
 
     const history = useHistory()
 

@@ -33,7 +33,7 @@ const LeaderBoard:React.FC=()=> {
                     </thead>
                     <tbody>
                         {game.map((g:any,i:number)=>
-                        <tr>
+                        <tr key = {i}>
                             <td>{i+1}</td>
                             <td style={{textTransform: "uppercase"}}>{g.playerName}</td>
                             <td>{g.punteggio}</td>
