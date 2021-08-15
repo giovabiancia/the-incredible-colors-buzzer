@@ -96,11 +96,11 @@ export default function useTimer(){
       };
       const checkConditions = ()=>{
         // se sono le prime 10 giocate salvali tutti ho messo 2 per semplificare il debug
-        if (game.length < 2){
+        if (game.length < 10){
             setShowInputModal(true)
         }
         // se non sono le prime 10
-        if (game.length >=2){
+        if (game.length >=10){
             // controlla che il punteggio attuale sia tra i primi 10 della leaderboard
 
             for (var i = 0; i < game.length; i++) {
