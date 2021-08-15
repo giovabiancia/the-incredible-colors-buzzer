@@ -95,7 +95,7 @@ export default function useTimer(){
             setIntervalID(()=>timer)
       };
       const checkConditions = ()=>{
-        // se sono le prime 10 giocate salvali tutti ho messo 2 per semplificare il debug
+        // se sono le prime 10 giocate salvali tutti
         if (game.length < 10){
             setShowInputModal(true)
         }
