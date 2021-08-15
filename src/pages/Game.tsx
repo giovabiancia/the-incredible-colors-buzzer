@@ -15,8 +15,14 @@ const Game:React.FC=()=> {
     const logic = useGameLogic()
 
     const goToHome=()=>{
+        // se è l' ultima giocata salva
+        if (logic.vita===3){
+            logic.handleTryAgain()
+        }
         // torna alla home
         history.push('/')
+
+
     }
 
 
