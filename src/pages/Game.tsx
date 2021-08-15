@@ -11,10 +11,8 @@ import useGameLogic from '../hooks/useGameLogic';
 
 const Game:React.FC=()=> {
 
-
     const history = useHistory()
     const logic = useGameLogic()
-
 
     const goToHome=()=>{
         // torna alla home
@@ -55,7 +53,7 @@ const Game:React.FC=()=> {
                 </Col>
             </Row>
 
-
+            {/*  errore findDOMNode sul modal di bootstrap */}
 
             <Modal show={logic.showModal} onHide={logic.handleCloseModal} centered backdrop="static">
                 <Modal.Header closeButton >
@@ -84,7 +82,6 @@ const Game:React.FC=()=> {
                    <Button variant="secondary" onClick={logic.handleTryAgain}>Riprova a giocare</Button>:
                    <Button variant="secondary" onClick={logic.handleKeepGoing}>Continua</Button>
                 }
-
 
                 <Button variant="primary" onClick={goToHome}>
                     Torna a Home

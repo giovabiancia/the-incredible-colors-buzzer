@@ -30,6 +30,7 @@ export default function useTimer(){
         //setChampion(false);
         var starts = Date.now()
         setTimeStart(()=>starts)
+        return ()=>{setOver(true)}
     }, [start])
 
     useEffect(() => {
@@ -41,7 +42,6 @@ export default function useTimer(){
             const colorsArray = ["red","blue","green","yellow"];
             const random = Math.floor(Math.random() * colorsArray.length);
             setMainColor(colorsArray[random])
-           /*  tick(false ) */
             tick(false)
         },randomRange*1000);
     }, [restart])
@@ -175,7 +175,6 @@ export default function useTimer(){
             setMainColor(colorsArray[random])
 
             // assegno un punteggio in base al range di tempo rimanente sull' orologio in quel momento
-
             let timeDifference = (timeClick-timeStart) /1000
             let middle= (gameDurationFixed/3)*2
             let last = (gameDurationFixed/3)

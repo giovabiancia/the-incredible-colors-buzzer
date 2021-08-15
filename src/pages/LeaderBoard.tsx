@@ -1,10 +1,10 @@
-import React, {useContext, useEffect} from 'react'
+import React, {useContext} from 'react'
 import { Container, Row, Col, Table } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 import { GameContext } from './../context/GameContext';
 
 const LeaderBoard:React.FC=()=> {
-    const [game, setGame] = useContext(GameContext)
+    const [game] = useContext(GameContext)
     const history = useHistory()
     const goToHome=()=>{
         // torna alla home

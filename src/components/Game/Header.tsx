@@ -22,7 +22,7 @@ const Header=(props:HeaderProp)=> {
                     <h4 className="handler" onClick={goToHome}>Exit</h4></Col>
                 <Col className="center mt-4">
                     <h4>punteggio: {props.punteggio}</h4>
-                    <h4 style={{marginLeft:30}}>vita: {props.vita}</h4>
+                    <h4 style={{marginLeft:30}}>vite {props.vita}</h4>
                 </Col>
             </Row>
 
